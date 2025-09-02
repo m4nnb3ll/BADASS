@@ -1,0 +1,15 @@
+# /root/static_vxlan.sh: Configure Vxlan statically
+#! /bin/bash
+# Give the external interface an ip address to be able to communicate
+ip addr add 192.168.1.2/30 dev eth2 # r2 (VTEP 2)
+
+# r2
+ip link add vxlan10 type vxlan id 10 remote 192.168.1.1 dstport 4789
+# turn up the vxlan
+ip link set vxlan10 up
+
+# Create a bridge (br0), and add both vxlan10 and host facing interface
+ip link add name br0 type bridge
+ip link set dev br0 up
+ip link set vxlan10 master br0
+ip link set eth0 master br0

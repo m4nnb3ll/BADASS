@@ -1,0 +1,34 @@
+# /etc/frr/frr.conf: Configure Route Reflector
+
+# Configure interfaces
+
+# to leaf 1
+interface eth1
+  ip address 10.10.10.10/31
+
+# to leaf 2
+interface eth2
+  ip address 10.10.10.20/31
+
+# to leaf 3
+interface eth3
+  ip address 10.10.10.30/31
+
+# loopback
+interface lo
+  ip address 1.1.1.10/32
+
+# Configure the underlay
+router ospf
+  network 0.0.0.0/0 area 0
+
+# Configure BGP
+router bgp 1337
+  neighbor evpn-vxlan peer-group
+  neighbor evpn-vxlan remote-as 1337
+  neighbor evpn-vxlan update-source lo
+  bgp listen range 1.1.1.8/29 peer-group evpn-vxlan
+
+  address-family l2vpn evpn
+    neighbor evpn-vxlan activate
+    neighbor evpn-vxlan route-reflector-client

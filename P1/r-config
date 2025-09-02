@@ -1,0 +1,19 @@
+# Make sure to make the following directories persistent in GNS3
+# /root
+# /etc/frr
+
+# /root/.bashrc: Put aliases for easier mgmt
+alias start="/bin/bash /usr/lib/frr/frrinit.sh start"
+alias stop="/bin/bash /usr/lib/frr/frrinit.sh stop"
+alias restart="stop && start"
+
+# source the .bashrc
+source /root/.bashrc
+
+# /etc/frr/daemons: Activate required services/protocols
+bgpd=yes
+ospfd=yes
+isisd=yes
+
+# Launch FRR using 'start' alias
+start
